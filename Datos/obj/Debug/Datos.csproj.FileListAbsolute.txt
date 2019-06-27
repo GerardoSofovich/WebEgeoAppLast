@@ -1,0 +1,10 @@
+D:\WebEgeoApp\Datos\bin\Debug\Datos.dll.config
+D:\WebEgeoApp\Datos\bin\Debug\Datos.dll
+D:\WebEgeoApp\Datos\bin\Debug\Datos.pdb
+D:\WebEgeoApp\Datos\bin\Debug\EntityFramework.dll
+D:\WebEgeoApp\Datos\bin\Debug\EntityFramework.SqlServer.dll
+D:\WebEgeoApp\Datos\bin\Debug\EntityFramework.xml
+D:\WebEgeoApp\Datos\bin\Debug\EntityFramework.SqlServer.xml
+D:\WebEgeoApp\Datos\obj\Debug\Datos.csprojResolveAssemblyReference.cache
+D:\WebEgeoApp\Datos\obj\Debug\Datos.dll
+D:\WebEgeoApp\Datos\obj\Debug\Datos.pdb

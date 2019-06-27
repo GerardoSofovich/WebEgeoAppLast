@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="EgeoModelStoreContainer" CdmEntityContainer="EgeoEntities">
+    <EntitySetMapping Name="Choferes">
+      <EntityTypeMapping TypeName="EgeoModel.Choferes">
+        <MappingFragment StoreEntitySet="Choferes">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="nombre" ColumnName="nombre" />
+          <ScalarProperty Name="apellido" ColumnName="apellido" />
+          <ScalarProperty Name="cuit" ColumnName="cuit" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Trips">
+      <EntityTypeMapping TypeName="EgeoModel.Trips">
+        <MappingFragment StoreEntitySet="Trips">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="fechaViajes" ColumnName="fechaViajes" />
+          <ScalarProperty Name="codChof" ColumnName="codChof" />
+          <ScalarProperty Name="origen" ColumnName="origen" />
+          <ScalarProperty Name="destino" ColumnName="destino" />
+          <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+          <ScalarProperty Name="peso" ColumnName="peso" />
+          <ScalarProperty Name="precio" ColumnName="precio" />
+          <ScalarProperty Name="acomp" ColumnName="acomp" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
