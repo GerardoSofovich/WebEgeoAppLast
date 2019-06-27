@@ -1,0 +1,61 @@
+nav
+{
+background-color: #FD7E7E
+}
+.fa-sistrix button
+{
+text-align:center
+}
+h5{
+size:+3;
+color: blue;
+
+}
+
+.form-control.ng-valid.ng-dirty {
+    border: 3px solid green
+}
+
+.form-control.ng-invalid.ng-dirty{
+    border:3px solid red
+}
+
+input<readonly> 
+{
+background-color:#A9D0F5
+}
+
+div.col
+{
+background-color:#e8f2ff
+}
+
+#nvbSearch
+{
+border-style:none
+}
+
+
+#Enombre
+{
+font-style:italic
+}
+
+#year1
+{
+background-color:#ffe8f2
+}
+
+#mes1
+{
+background-color:#ffb2d3
+}
+
+a<href>
+{
+text-align:justify
+}
+hr<noshade>
+{
+noshade
+}
