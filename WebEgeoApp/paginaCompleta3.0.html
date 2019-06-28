@@ -5,12 +5,13 @@
 	<title>egeo</title>
 	<link href="bootstrap/bootstrap.css" rel="stylesheet"/>
 	<link href="bootstrap/styleSheet.css" rel="stylesheet"/>
-	<link href="uiBootstrapCustom/ui-bootstrap-custom-2.5.0-csp" rel="stylesheet"/>
+	<link href="bootstrap/ui-bootstrap-custom-2.5.0-csp" rel="stylesheet"/>
 
 	<script src="scripts/jquery-3.0.0.slim.js"></script>
 	<script src="scripts/angular.js"></script>
 	<script src="bootstrap/bootstrap.bundle.js"></script>
-	<script src="uiBootstrapCustom/ui-bootstrap-custom-2.5.0.min.js"></script>
+	<script src="scripts/ui-bootstrap-custom-tpls-2.5.0.min.js"></script>
+	<script src="scripts/ui-bootstrap-custom-2.5.0.min.js"></script>
 	<script src="scripts/viajesScript.js"></script>
 	
 
@@ -136,23 +137,23 @@
 			        	            <th scope="col">Opcion</th>
 			        	        </tr>
         			 	   </thead>
-			         	   <tbody ng-repeat="v in viajes|filter:buscarFecha ">
+			         	   <tbody ng-repeat="v in viajes|filter:buscarFecha|filter:buscarChofer ">
 			               	 	<tr>
 			                	    <th scope="row">{{v.id}}</th>
 			                	    <td>{{v.fecha|date:"dd/mm/yyyy"}}</td>
-			                	    <td>{{nombreFunc(v.codChof)}}</td>
-			                	    <td>{{apellidoFunc(v.codChof)}}</td>
+			                	    <td>{{nombreFunc(v.codChof)| uppercase}}</td>
+			                	    <td>{{apellidoFunc(v.codChof)| uppercase}}</td>
 			                	    <td>{{v.peso}}</td>
-			                	    <td>{{v.origen}}</td>
-			                	    <td>{{v.destino}}</td>
-			                	    <td>{{v.descripcion}}</td>
+			                	    <td>{{v.origen| uppercase}}</td>
+			                	    <td>{{v.destino| uppercase}}</td>
+			                	    <td>{{v.descripcion| uppercase}}</td>
 			                	    <td>{{v.precio|currency: $}}</td>
-			                	    <td>{{v.veh}}</td>
-			                	    <td>{{v.acom?"si":"no"}}</td>
+			                	    <td>{{v.veh| uppercase}}</td>
+			                	    <td>{{v.acom?"SI":"NO"}}</td>
 			        	            <td>
 				                        <div class="btn-group" role="group" aria-label="Basic example">
-				                            <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#mdl3" data-title="Modificar Viaje" data-id={{v.id}} data-fecha={{v.fecha}} data-chofer={{v.codChof}} data-peso={{v.peso}} data-origen={{v.origen}} data-destino={{v.destino}} data-descripcion={{v.descripcion}} data-precio={{v.precio}} data-veh={{v.veh}} data-acom={{v.acom}} ng-click="llenarModalViaje">editar</button>
-				                            <button type="button" class="btn btn-alert alert-danger">eliminar</button>
+				                            <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#mdl3" data-title="Modificar Viaje" data-id={{v.id}} data-fecha={{v.fecha}} data-chofer={{v.codChof}} data-peso={{v.peso}} data-origen={{v.origen}} data-destino={{v.destino}} data-descripcion={{v.descripcion}} data-precio={{v.precio}} data-veh={{v.veh}} data-acom={{v.acom}} ng-click="llenarModalViaje&&Modificar(v)">editar</button>
+				                            <button type="button" class="btn btn-alert alert-danger" ng-click="eliminar(v)">eliminar</button>
 	
 				                        </div>
 				                    </td>
@@ -167,13 +168,13 @@
         					        <span class="label label-default font-weight-bold">Registros: {{RegistrosTotal}}</span>
         					    </div>
         					    <div class="col-sm-6 text-center">
-                                     aqui componente paginador
+                                     			<ul uib-pagination total-items="RegistrosTotal" ng-model="PaginaActual" max-size="10" class="pagination-sm" boundary-links="true" first-text="Primera" last-text="Ultima" previous-text="Anterior" next-text="Siguiente" rotate="true" ng-change="Buscar()"></ul>
 					            </div>
 					        </div>
 					    </div>
 				</div>
 			        <!-- Button trigger modal -->
-			        <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#mdl3" data-id=" " data-title="Agregar Viaje">
+			        <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#mdl3" data-id=" " data-title="Agregar Viaje" ng-click="NuevoViaje">
 			            Agregar Viaje
 			        </button>
 
@@ -196,6 +197,9 @@
 			                                            <span class="input-group-text" id="inputGroup-sizing-default">Fecha</span>
 			                                        </div>
 			                                        <input id="btnfecha" type="text" placeholder="dd/mm/aaaa" class="form-control text-uppercase" aria-label="Default" aria-describedby="inputGroup-sizing-default" name="frmFecha" ng-model="viajes.fecha" maxlength="10" required />
+								<div class="alert alert-danger" role="alert" ng-show="frmViaje.frmFecha.$dirty && frmViaje.$invalid"> 
+                                					La fecha debe ser 'dd/mm/yyyy'
+                                				</div>
        				                             </div>
        				                         </div>
       				                      </div>
@@ -205,7 +209,7 @@
                                 			        <div class="input-group-prepend">
                                 			            <span class="input-group-text" id="inputGroup-sizing-default">Chofer</span>
                                 			        </div>
-                                                    <div class="comboChoferes">
+                                                    		<div class="comboChoferes">
 			                                                    		<div class="combo-head">
 				                                                    		<span class="spanChoferes">Elige algun Chofer: </span>
 					                                                    	<select id="btnchof" class="form-control" name="select" ng-model="viajes.codChof" required>
@@ -214,7 +218,9 @@
 					                                                    	</select>
 				                                                    	</div>
 			                                        </div>
-<!--                                			        <input id="btnchof" type="number" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" ng-model="viajes.codChof" required />-->
+								<div class="alert alert-danger" role="alert" ng-show="frmViaje.select.$dirty && frmViaje.$invalid"> 
+                                					Debe elegir un chofer
+                                				</div>
 
                                 			    </div>
                                				 </div>
@@ -225,7 +231,10 @@
                         			                <div class="input-group-prepend">
                         			                    <span class="input-group-text" id="inputGroup-sizing-default">Peso (kg)</span>
                                 			        </div>
-                                			        <input id="btnpeso" type="number" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" ng-model="viajes.peso" required />
+                                			        <input id="btnpeso" type="number" class="form-control" name="frmPeso" aria-label="Default" aria-describedby="inputGroup-sizing-default" ng-model="viajes.peso" required />
+								<div class="alert alert-danger" role="alert" ng-show="frmViaje.frmPeso.$dirty && frmViaje.$invalid"> 
+                                					El peso debe ser numerico y es obligatorio
+                                				</div>
                                 			    </div>
                               				  </div>
                            			       </div>
@@ -236,7 +245,10 @@
                            				             <div class="input-group-prepend">
                            				                 <span class="input-group-text" id="inputGroup-sizing-default">Origen</span>
                            				             </div>
-                                				     <input id="btnorigen" type="text" class="form-control text-uppercase" aria-label="Default" aria-describedby="inputGroup-sizing-default" ng-model="viajes.origen" required />
+                                				     <input id="btnorigen" type="text" class="form-control text-uppercase" name="frmOrigen" aria-label="Default" aria-describedby="inputGroup-sizing-default" ng-model="viajes.origen" required />
+								     <div class="alert alert-danger" role="alert" ng-show="frmViaje.frmOrigen.$dirty && frmViaje.$invalid"> 
+                                					Debe escribir el origen
+                                				     </div>
                      				                 </div>
                         			             </div>
                    			               </div>
@@ -246,7 +258,10 @@
                                 				        <div class="input-group-prepend">
                                 				            <span class="input-group-text" id="inputGroup-sizing-default">Destino</span>
                                 				        </div>
-                                				        <input id="btndestino" type="text" class="form-control text-uppercase" aria-label="Default" aria-describedby="inputGroup-sizing-default" ng-model="viajes.destino" required />
+                                				        <input id="btndestino" type="text" class="form-control text-uppercase" name="frmDestino" aria-label="Default" aria-describedby="inputGroup-sizing-default" ng-model="viajes.destino" required />
+								        <div class="alert alert-danger" role="alert" ng-show="frmViaje.frmDestino.$dirty && frmViaje.$invalid"> 
+                                					    Debe escribir el destino
+                                				        </div>
                                 				    </div>
                               				     </div>
                             				</div>
@@ -267,7 +282,10 @@
                                 				        <div class="input-group-prepend">
                                 				            <span class="input-group-text" id="inputGroup-sizing-default">Precio ($)</span>
                                 				        </div>
-                                				        <input id="btnprecio" type="number" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" ng-model="viajes.precio" required />
+                                				        <input id="btnprecio" type="number" class="form-control" name="frmPrecio" aria-label="Default" aria-describedby="inputGroup-sizing-default" ng-model="viajes.precio" required />
+								        <div class="alert alert-danger" role="alert" ng-show="frmViaje.frmPrecio.$dirty && frmViaje.$invalid"> 
+                                					     Debe escribir el precio y tiene que ser numerico
+                                				        </div>
                                 				    </div>
                               				      </div>
                             				</div>
@@ -277,7 +295,10 @@
                                 				        <div class="input-group-prepend">
                                 				            <span class="input-group-text" id="inputGroup-sizing-default">Vehiculo</span>
                                 				        </div>
-                                				        <input id="btnveh" type="text" class="form-control text-uppercase" aria-label="Default" aria-describedby="inputGroup-sizing-default" ng-model="viajes.veh" required />
+                                				        <input id="btnveh" type="text" class="form-control text-uppercase" name="frmVeh" aria-label="Default" aria-describedby="inputGroup-sizing-default" ng-model="viajes.veh" required />
+								        <div class="alert alert-danger" role="alert" ng-show="frmViaje.frmVeh.$dirty && frmViaje.$invalid"> 
+                                					    Debe escribir el vehiculo
+                                				        </div>
                                				        </div>
                            				     </div>
                             				</div>
@@ -288,12 +309,11 @@
                         			                    <span class="input-group-text" id="inputGroup-sizing-default">Acompaniante</span>
                         			                </div>
 								<div class="btn-group btn-group-toggle" data-toggle="buttons">
-								  <label class="btn btn-secondary active">
-								    <input type="radio" name="options" id="option1" autocomplete="off" checked> Sin
-								  </label>
-								  <label class="btn btn-secondary">
-								    <input type="radio" name="options" id="option2" autocomplete="off"> Con
-								  </label>
+									<select id="cboAcom" name="acom" class="form-control" ng-model="viaje.acom">
+										<option value="false">sin</option>
+										<option value="true">con</option>
+									</select>
+								  
 						        	</div>
                             			           </div>
                             			        </div>
@@ -301,7 +321,7 @@
                      				   </form>
 			                        <div class="modal-footer">
                 				        <button type="button" class="btn btn-danger" ng-click="LimpiarForm()" data-dismiss="modal" >Cerrar</button>
-                				        <button type="button" class="btn btn-primary" ng-disabled="frmViaje.$invalid" ng-click="LimpiarForm()"> Enviar</button>
+                				        <button type="button" class="btn btn-primary" ng-disabled="frmViaje.$invalid" ng-click="LimpiarForm()&&guardarViaje"> Enviar</button>
                 			        </div>
             				    </div>
             				</div>
