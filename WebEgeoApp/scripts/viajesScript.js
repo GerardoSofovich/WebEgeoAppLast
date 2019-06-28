@@ -1,10 +1,11 @@
-﻿var myApp = angular.module("myApp",['ui.bootstrap']);
+var myApp = angular.module("myApp",['ui.bootstrap']);
 myApp.controller("appCtrl", function ($scope, $http) {
     $scope.paginaActual = 1;
 
     $scope.author = "Nahuel Piguillem";
     $scope.Choferes = [];
     $scope.Viajes = [];
+    $scope.viaje=[];
     $scope.TitulosV = { A: '(Agregar)', M: '(Modificar)' }
     $scope.TitulosAccionABM = { V: '(Viajes)', CH: '(Choferes)', C: '(Contacto)', H: '(Home)' };
     $scope.AccionABM = 'V';
@@ -13,7 +14,7 @@ myApp.controller("appCtrl", function ($scope, $http) {
     $scope.ListarChoferes = function () { $scope.AccionABM = 'CH' };
     $scope.Contactear = function () { $scope.AccionABM = 'C' };
     $scope.NuevoViaje = function () {
-        $scope.Viaje = {
+        $scope.viaje = {
             id: '',
             fechaViaje: '',
             codChof: '',
@@ -28,8 +29,11 @@ myApp.controller("appCtrl", function ($scope, $http) {
         $scope.AccionV = 'A';
 
     };
+    $scope.buscarPorId=function (id){
+	
+    };
     $scope.Modificar = function (vi) {
-        $scope.Viaje = vi;
+        $scope.viaje = vi;
         $scope.AccionV = 'M';
     };
 
@@ -56,11 +60,12 @@ myApp.controller("appCtrl", function ($scope, $http) {
     };
     $scope.guardarViaje = function () {
         if ($scope.AccionV == 'A') {
-            $http.post("/api/Viajes", $scope.Viaje).then(
+	    $scope.viaje.id=$scope.proxId;	
+            $http.post("/api/Viajes", $scope.viaje).then(
                 				function (response) {
                 				    // Elviaje se agregò con èxito
                 				    $scope.cargarViajes();
-                				    $scope.Viaje = [];
+                				    $scope.viaje = [];
                 				}
             						);
         }
@@ -69,15 +74,27 @@ myApp.controller("appCtrl", function ($scope, $http) {
                 				function (response) {
                 				    // El viaje se actualizò con èxito
                 				    $scope.cargarViajes();
-                				    $scope.Viaje = [];
+                				    $scope.viaje = [];
                 				}
             						);
 
         }
+	$("#mdl3").dismiss();
     };
+	
+    $scope.eliminar = function (vi) {
+            var resp = confirm("Esta seguro de eliminar este registro?");
+            if (resp) {
+                $http.delete('/api/Viajes/' + vi.id, vi).then(function () {
+                    $scope.cargarViajes();  // vuelve a cargar los artículos desde el servidor
+                });
+            }
+        };
+
     $scope.choferes = [{ id: 1, nombre: "Ruben", apellido: "Ramirez", cuit: "1224-4" }, { id: 2, nombre: "Juanfra", apellido: "Quinteros", cuit: "1765-4" }, { id: 3, nombre: "Lucas", apellido: "Moura", cuit: "1887-1" }, { id: 4, nombre: "Nicolas", apellido: "Veggetti", cuit: "1994-7" }, { id: 5, nombre: "Jose", apellido: "Lopex", cuit: "1444-5"}];
-    $scope.viajes = [{ id: 1, fecha: "01/01/2019", codChof: 1, peso: 3000, origen: "Cordoba", destino: "pilar", descripcion: "general", precio: "2500", veh: "h-100", acom: true }, { id: 2, fecha: "01/01/2018", codChof: 2, peso: 3000, origen: "pilar", destino: "cordoba", descripcion: "general", precio: "2500", veh: "h-100", acom: true}]
+    $scope.viajes = [{ id: 1, fecha: "01/01/2019", codChof: 1, peso: 3000, origen: "Cordoba", destino: "pilar", descripcion: "general", precio: "2500", veh: "h-100", acom: false }, { id: 2, fecha: "01/01/2018", codChof: 2, peso: 3000, origen: "pilar", destino: "cordoba", descripcion: "general", precio: "2500", veh: "h-100", acom: true}]
     $scope.RegistrosTotal = $scope.viajes.length;
+    $scope.proxId=$scope.RegistrosTotal + 1;
     $scope.LimpiarForm = function () { $scope.frmViaje.$setUntouched(); $scope.frmViaje.$setPristine() };
     $scope.llenarModalViaje = $("#mdl3").on("show.bs.modal", function (e) {
         var button = $(e.relatedTarget)
@@ -90,6 +107,7 @@ myApp.controller("appCtrl", function ($scope, $http) {
         var destino = button.data("destino")
         var veh = button.data("veh")
         var precio = button.data("precio")
+	var acom = button.data("acom")
         var modal = $("#mdl3")
         var title = button.data("title")
         modal.find(".modal-title").text(title + ": " + recipient)
@@ -101,6 +119,7 @@ myApp.controller("appCtrl", function ($scope, $http) {
         modal.find("#btndescripcion").val(descripcion)
         modal.find("#btnprecio").val(precio)
         modal.find("#btnveh").val(veh)
+	modal.find("#cboAcom").val(acom)
     });
     $scope.nombreFunc = function nombreFunc(codChof) {
         for (var llave = 0; llave < $scope.choferes.length; llave++) {
@@ -212,3 +231,4 @@ myApp.filter('filterChofer',function () {
 						}
 	
 					   });
+
